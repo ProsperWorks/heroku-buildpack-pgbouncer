@@ -57,6 +57,27 @@ log_disconnections = ${PGBOUNCER_LOG_DISCONNECTIONS:-1}
 log_pooler_errors = ${PGBOUNCER_LOG_POOLER_ERRORS:-1}
 stats_period = ${PGBOUNCER_STATS_PERIOD:-60}
 
+; Low-level network settings, defaults as per pgbouncer:
+;
+;   https://pgbouncer.github.io/config.html#low-level-network-settings
+;
+; tcp_keepcnt, tcp_keepidle, and tcp_keepidle, supported with defaults
+; for Linux as documented above.
+;
+; tcp_socket_buffer not supported because I could not find a sensible
+; default.
+;
+pkt_buf = ${PGBOUNCER_PKT_BUF:-4096}
+max_packet_size = ${PGBOUNCER_MAX_PACKET_SIZE:-2147483647}
+listen_backlog = ${PGBOUNCER_LISTEN_BACKLOG:-128}
+sbuf_loopcnt = ${PGBOUNCER_SBUF_LOOPCNT:-5}
+suspend_timeout = ${PGBOUNCER_SUSPEND_TIMEOUT:-10}
+tcp_defer_accept = ${PGBOUNCER_TCP_DEFER_ACCEPT:-45}
+tcp_keepalive = ${PGBOUNCER_TCP_KEEPALIVE:-1}
+tcp_keepcnt = ${PGBOUNCER_TCP_KEEPCNT:-9}
+tcp_keepidle = ${PGBOUNCER_TCP_KEEPIDLE:-7200}
+tcp_keepintvl = ${PGBOUNCER_TCP_KEEPINTVL:-75}
+
 ; PW modification: enable hard-coded user name which can issue the
 ; SHOW commands to get stats from pgbouncer.
 ;
