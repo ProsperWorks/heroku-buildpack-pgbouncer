@@ -65,7 +65,12 @@ stats_period = ${PGBOUNCER_STATS_PERIOD:-60}
 ; for Linux as documented above.
 ;
 ; tcp_socket_buffer not supported because I could not find a sensible
-; default.
+; documented default.
+;
+; I also confirmed these settings and their defaults are supported in
+; pgbouncer 1.7, not just pgbouncer HEAD:
+;
+;   https://github.com/pgbouncer/pgbouncer/blob/pgbouncer_1_7/etc/pgbouncer.ini
 ;
 pkt_buf = ${PGBOUNCER_PKT_BUF:-4096}
 max_packet_size = ${PGBOUNCER_MAX_PACKET_SIZE:-2147483647}
