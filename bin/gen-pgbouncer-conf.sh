@@ -32,6 +32,7 @@ ciphers = HIGH:!ADH:!AECDH:!LOW:!EXP:!MD5:!3DES:!SRP:!PSK:@STRENGTH
 debug = ${PGBOUNCER_STUNNEL_LOGLEVEL:-notice}
 EOFEOF
 
+mkdir -p /app/vendor/pgbouncer
 cat > /app/vendor/pgbouncer/pgbouncer.ini << EOFEOF
 [pgbouncer]
 listen_addr = 127.0.0.1
