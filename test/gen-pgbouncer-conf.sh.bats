@@ -93,3 +93,12 @@ load helper
   assert grep -v arcanus        /app/vendor/pgbouncer/users.txt
   assert grep    'md5468.*559c' /app/vendor/pgbouncer/users.txt
 }
+
+@test "specific known-good username password pair" {
+  export PGBOUNCER_STATS_USERNAME=pgbouncer-stats
+  export PGBOUNCER_STATS_PASSWORD=naked
+  rm -f /app/vendor/pgbouncer/pgbouncer.ini
+  run bash bin/gen-pgbouncer-conf.sh
+  assert_success
+  assert grep 'md572c5dd36a292efeaf13075b5eeb28693' /app/vendor/pgbouncer/users.txt
+}
