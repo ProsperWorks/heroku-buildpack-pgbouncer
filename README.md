@@ -159,3 +159,4 @@ and [stunnel](http://linux.die.net/man/8/stunnel) configurations to see what set
 - `PGBOUNCER_STATS_USERNAME` and `PGBOUNCER_STATS_PASSWORD` Set these to enable stats_users SHOW access to pgbouncer.
 
 For more info, see [CONTRIBUTING.md](CONTRIBUTING.md)
+
