@@ -45,7 +45,7 @@ VENDORED_PGBOUNCER="vendor/pgbouncer"
 PATH="$BUILD_DIR/$VENDORED_PGBOUNCER/bin:$PATH"
 echo "-----> Fetching and vendoring pgbouncer into slug"
 mkdir -p "$BUILD_DIR/$VENDORED_PGBOUNCER"
-tar xzf pgbouncer-${PGBOUNCER_VERSION}.tgz -C ${BUILD_DIR}/${VENDORED_PGBOUNCER}
+tar xzf "${BUILDPACK_DIR}/pgbouncer-${PGBOUNCER_VERSION}.tgz" -C ${BUILD_DIR}/${VENDORED_PGBOUNCER}
 
 echo "-----> Moving the configuration generation script into app/bin"
 mkdir -p $BUILD_DIR/bin
