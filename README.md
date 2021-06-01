@@ -167,3 +167,4 @@ postgres://<user>:<pass>@<host>:<port>/<database>
 ```
 
 This corresponds to the regular expression `^postgres(?:ql)?:\/\/([^:]*):([^@]*)@(.*?):(.*?)\/(.*?)$`. All components must be present in order for the buildpack to correctly parse the connection string.
+Dummy change by JHW.
