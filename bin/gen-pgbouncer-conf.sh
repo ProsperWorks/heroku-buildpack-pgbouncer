@@ -11,16 +11,21 @@ if [ -z "${SERVER_RESET_QUERY}" ] &&  [ "$POOL_MODE" == "session" ]; then
   SERVER_RESET_QUERY="DISCARD ALL;"
 fi
 
-mkdir -p /app/vendor/pgbouncer
-cat >> /app/vendor/pgbouncer/pgbouncer.ini << EOFEOF
+PGBOUNCER_DIR=/app/vendor/pgbouncer
+mkdir -p ${PGBOUNCER_DIR}
+
+
+cat >> ${PGBOUNCER_DIR}/pgbouncer.ini << EOFEOF
 [pgbouncer]
 listen_addr = ${PGBOUNCER_LISTEN_ADDR:-127.0.0.1}
 listen_port = 6000
 auth_type = md5
-auth_file = /app/vendor/pgbouncer/users.txt
+auth_file = ${PGBOUNCER_DIR}/users.txt
+
 server_tls_sslmode = prefer
 server_tls_protocols = secure
 server_tls_ciphers = HIGH:!ADH:!AECDH:!LOW:!EXP:!MD5:!3DES:!SRP:!PSK:@STRENGTH
+
 
 ; When server connection is released back to pool:
 ;   session      - after client disconnects
@@ -67,22 +72,48 @@ tcp_keepidle = ${PGBOUNCER_TCP_KEEPIDLE:-7200}
 tcp_keepintvl = ${PGBOUNCER_TCP_KEEPINTVL:-75}
 EOFEOF
 
+
+# add TLS configuration: for client side of pgbouncer will be "require", for server side of pgbouncer will be "verify-ca". 
+# we need root.crt , certificate and key of pgbouncer on place to verify, in order to handle secrets in security compliant manner 
+# they will be encrypted and come from SEO;
+# add certificates, key and change sslmode of pgbouncer.ini if all of certs and key are presented
+#
+if [ -n "${INTERNAL_TLS_CRT}" ] && [ -n "${INTERNAL_TLS_KEY}" ] && [ -n "${INTERNAL_CA_CRT}" ]
+then 
+  echo "${INTERNAL_TLS_CRT}" > ${PGBOUNCER_DIR}/pgbouncer.crt
+  echo "${INTERNAL_CA_CRT}" > ${PGBOUNCER_DIR}/pgbouncer_ca.crt
+  echo "${INTERNAL_TLS_KEY}" > ${PGBOUNCER_DIR}/pgbouncer.key
+
+  sed -i '/^server_tls_sslmode =.*/c\
+client_tls_sslmode = require \
+client_tls_protocols = secure \
+client_tls_ciphers =  HIGH:!ADH:!AECDH:!LOW:!EXP:!MD5:!3DES:!SRP:!PSK:@STRENGTH \
+client_tls_key_file = '"${PGBOUNCER_DIR}"'/pgbouncer.key \
+client_tls_cert_file = '"${PGBOUNCER_DIR}"'/pgbouncer.crt \
+client_tls_ca_file = '"${PGBOUNCER_DIR}"'/pgbouncer_ca.crt \
+server_tls_sslmode = verify-ca \
+server_tls_key_file = '"${PGBOUNCER_DIR}"'/pgbouncer.key \
+server_tls_cert_file = '"${PGBOUNCER_DIR}"'/pgbouncer.crt \
+server_tls_ca_file = '"${PGBOUNCER_DIR}"'/pgbouncer_ca.crt' ${PGBOUNCER_DIR}/pgbouncer.ini
+
+fi
+
 # If PGBOUNCER_STATS_USERNAME and PGBOUNCER_STATS_PASSWORD are
 # defined, enable SHOW commands from pgbouncer with those credentials.
 #
-rm -f /app/vendor/pgbouncer/users.txt
+rm -f ${PGBOUNCER_DIR}/users.txt
 if [ -n "$PGBOUNCER_STATS_USERNAME" ] && [ -n "$PGBOUNCER_STATS_PASSWORD" ]
 then
     STATS_MD5_PASS="md5"`echo -n ${PGBOUNCER_STATS_PASSWORD}${PGBOUNCER_STATS_USERNAME} | md5sum | awk '{print $1}'`
-    cat >> /app/vendor/pgbouncer/pgbouncer.ini << EOFEOF
+    cat >> ${PGBOUNCER_DIR}/pgbouncer.ini << EOFEOF
 stats_users = $PGBOUNCER_STATS_USERNAME
 EOFEOF
-    cat >> /app/vendor/pgbouncer/users.txt << EOFEOF
+    cat >> ${PGBOUNCER_DIR}/users.txt << EOFEOF
 "$PGBOUNCER_STATS_USERNAME" "$STATS_MD5_PASS"
 EOFEOF
 fi
 
-cat >> /app/vendor/pgbouncer/pgbouncer.ini << EOFEOF
+cat >> ${PGBOUNCER_DIR}/pgbouncer.ini << EOFEOF
 [databases]
 EOFEOF
 
@@ -104,15 +135,15 @@ do
     export ${POSTGRES_URL}_PGBOUNCER=postgres://$DB_USER:$DB_PASS@127.0.0.1:6000/$CLIENT_DB_NAME
   fi
 
-  cat >> /app/vendor/pgbouncer/users.txt << EOFEOF
+  cat >> ${PGBOUNCER_DIR}/users.txt << EOFEOF
 "$DB_USER" "$DB_MD5_PASS"
 EOFEOF
 
-  cat >> /app/vendor/pgbouncer/pgbouncer.ini << EOFEOF
+  cat >> ${PGBOUNCER_DIR}/pgbouncer.ini << EOFEOF
 $CLIENT_DB_NAME= host=$DB_HOST dbname=$DB_NAME port=$DB_PORT
 EOFEOF
 
   let "n += 1"
 done
 
-chmod go-rwx /app/vendor/pgbouncer/*
+chmod go-rwx ${PGBOUNCER_DIR}/*
