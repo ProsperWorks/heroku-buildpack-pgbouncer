@@ -1,6 +1,29 @@
-## unreleased
 
-* Updates development tooling
+## v0.9.0 (June 4, 2021)
+* remove heroku-16
+* revert back to pgbouncer 1.14
+## v0.8.0 (May 31, 2021)
+* pgbouncer 1.15
+* streamline bin/compile
+* moving to CircleCI
+* remove support for Cedar 14
+
+## v0.7.0 (August 7, 2020)
+* Change default branch name from master to main
+
+## v0.6.0 (June 12, 2020)
+* Add support for Heroku-20
+* Updates pgbouncer to 1.14 for Heroku-20
+* Updates pgbouncer to 1.14 for Heroku-18
+* Updates pgbouncer to 1.14 for Heroku-16
+
+## v0.5.0 (May 18, 2020)
+* Updates pgbouncer to 1.13 for Heroku-18
+* Updates pgbouncer to 1.13 for Heroku-16
+* Updates to Buildpack tooling
+
+## v0.4.0 (October 8, 2018)
+* Support for Heroku-18
 
 ## v0.3.4 (January 2, 2015)
 
