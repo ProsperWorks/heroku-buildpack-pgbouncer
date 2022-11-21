@@ -154,18 +154,7 @@ done
 
 chmod go-rwx ${PGBOUNCER_DIR}/*
 
-chmod g+s 
-cat >> /etc/logrotate.d/pgbouncer << EOFEOF
-${PGBOUNCER_DIR}/pgbouncer.log
-{
-  rotate 2
-  daily
-  maxsize 10M
-  missingok
-}
-EOFEOF
 
-chmod g-s
 
 
 

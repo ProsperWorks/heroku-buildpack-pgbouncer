@@ -14,7 +14,10 @@ build-heroku-22:
 	@echo "Building pgbouncer in Docker for heroku-22..."
 	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-22" -w /buildpack heroku/heroku:22-build support/pgbouncer-build
 
-shell:
-	@echo "Opening heroku-22 shell..."
-	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-22" -e "PORT=5000" -w /buildpack heroku/heroku:22-build bash
+#shell:
+#	@echo "Opening heroku-22 shell..."
+#	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-22" -e "PORT=5000" -w /buildpack heroku/heroku:22-build bash
 
+shell:
+	@echo "Opening heroku-18 shell..."
+	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-18" -e "PORT=5000" -w /buildpack heroku/heroku:18-build bash
