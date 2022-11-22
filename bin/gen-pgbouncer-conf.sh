@@ -3,6 +3,9 @@
 POSTGRES_URLS=${PGBOUNCER_URLS:-DATABASE_URL}
 POOL_MODE=${PGBOUNCER_POOL_MODE:-transaction}
 SERVER_RESET_QUERY=${PGBOUNCER_SERVER_RESET_QUERY}
+#CLIENT_IDLE_TIMEOUT=${CLIENT_IDLE_TIMEOUT:-0}
+
+
 n=1
 
 # if the SERVER_RESET_QUERY and pool mode is session, pgbouncer recommends DISCARD ALL be the default
@@ -21,7 +24,7 @@ listen_addr = ${PGBOUNCER_LISTEN_ADDR:-127.0.0.1}
 listen_port = 6000
 auth_type = md5
 auth_file = ${PGBOUNCER_DIR}/users.txt
-
+admin_users = citus
 server_tls_sslmode = prefer
 server_tls_protocols = secure
 server_tls_ciphers = HIGH:!ADH:!AECDH:!LOW:!EXP:!MD5:!3DES:!SRP:!PSK:@STRENGTH
@@ -34,6 +37,7 @@ server_tls_ciphers = HIGH:!ADH:!AECDH:!LOW:!EXP:!MD5:!3DES:!SRP:!PSK:@STRENGTH
 pool_mode = ${POOL_MODE}
 server_reset_query = ${SERVER_RESET_QUERY}
 max_client_conn = ${PGBOUNCER_MAX_CLIENT_CONN:-100}
+client_idle_timeout = ${CLIENT_IDLE_TIMEOUT:-0}
 default_pool_size = ${PGBOUNCER_DEFAULT_POOL_SIZE:-1}
 min_pool_size = ${PGBOUNCER_MIN_POOL_SIZE:-0}
 reserve_pool_size = ${PGBOUNCER_RESERVE_POOL_SIZE:-1}
@@ -44,6 +48,8 @@ server_connect_timeout = ${PGBOUNCER_SERVER_CONNECT_TIMEOUT:-15}
 log_connections = ${PGBOUNCER_LOG_CONNECTIONS:-1}
 log_disconnections = ${PGBOUNCER_LOG_DISCONNECTIONS:-1}
 log_pooler_errors = ${PGBOUNCER_LOG_POOLER_ERRORS:-1}
+logfile = ${PGBOUNCER_DIR}/pgbouncer.log
+
 stats_period = ${PGBOUNCER_STATS_PERIOD:-60}
 ignore_startup_parameters = ${PGBOUNCER_IGNORE_STARTUP_PARAMETERS}
 query_wait_timeout = ${PGBOUNCER_QUERY_WAIT_TIMEOUT:-120}
@@ -147,3 +153,13 @@ EOFEOF
 done
 
 chmod go-rwx ${PGBOUNCER_DIR}/*
+
+
+
+
+
+
+
+
+
+
