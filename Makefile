@@ -18,6 +18,10 @@ build-heroku-22:
 #	@echo "Opening heroku-22 shell..."
 #	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-22" -e "PORT=5000" -w /buildpack heroku/heroku:22-build bash
 
+# shell:
+# 	@echo "Opening heroku-18 shell..."
+# 	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-18" -e "PORT=5000" -w /buildpack heroku/heroku:18-build bash
+
 shell:
-	@echo "Opening heroku-18 shell..."
-	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-18" -e "PORT=5000" -w /buildpack heroku/heroku:18-build bash
+	@echo "Opening heroku-20 shell..."
+	@docker run -v $(shell pwd):/buildpack --rm -it -e "STACK=heroku-20" -e "PORT=5000" -w /buildpack heroku/heroku:20-build bash
